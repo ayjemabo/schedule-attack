@@ -12,6 +12,15 @@
   </style>
   <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css' rel='stylesheet' />
   <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.js'></script>
+  <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#000000">
+  <link rel="apple-touch-icon" href="logo192.png">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
   
 </head>
 <body>
@@ -76,7 +85,7 @@ function notifyScheduleTime() {
         try {
           new Notification("Schedule Attack Time!", {
             body: "It's time to pack your books for tomorrow!",
-            icon: "logo.png"
+            icon: "88601.png"
           });
         } catch (e) {
           console.log("Notification failed:", e);
