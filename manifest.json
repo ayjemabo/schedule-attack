@@ -1,7 +1,7 @@
 {
     "name": "Schedule Attack",
     "short_name": "Attack",
-    "start_url": "/schedule-attack/daily_schedule_reminder.html",
+    "start_url": "/schedule-attack/daily_schedule_attack.html",
     "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#000000",

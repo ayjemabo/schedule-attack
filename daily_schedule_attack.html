@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Daily Schedule Reminder</title>
+  <style>
+    body { font-family: Arial; background-color: #f0f0f0; padding: 0; margin: 0; }
+    .tabs { display: flex; background-color: #333; }
+    .tab {
+      flex: 1;
+      padding: 15px;
+      text-align: center;
+      background: #444;
+      color: white;
+      cursor: pointer;
+    }
+    .tab.active { background: #2196F3; }
+    .content { display: none; padding: 20px; }
+    .content.active { display: block; }
+    .class-item { margin-bottom: 10px; }
+    textarea { width: 100%; min-height: 80px; margin-top: 10px; }
+    .save-btn {
+      background-color: #2196F3;
+      color: white;
+      border: none;
+      padding: 10px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+    .ScheduleImage {
+position:absolute;
+right: 30px;
+top: 70px;
+width: 1000px;
+    }
+  </style>
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet" type="text/css" />
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.js" type="application/javascript"></script>
+    <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#000000">
+    <link rel="apple-touch-icon" href="logo192.png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <link rel="shortcut icon" href="icon.png" type="image/x-icon">
+</head>
+<body>
+
+<div class="tabs">
+<img src="88601.jpg" alt="" style="height: 60px;">
+  <div class="tab active" onclick="switchTab('schedule')">Daily Schedule</div>
+  <div class="tab" onclick="switchTab('revision')">Revision Zone</div>
+  <div class="tab" onclick="switchTab('planner')">Weekly Plan</div>
+  <div class="tab" onclick="switchTab('calendar')">📅 Timetable</div>
+  <div class="tab" onclick="switchTab('tools')">Tools & Extras</div>
+
+</div>
+
+<!-- DAILY SCHEDULE TAB -->
+<div id="schedule" class="content active">
+  <h1>Welcome to Your Daily Schedule Attack</h1>
+  <p id="dayInfo"></p>
+  <div id="scheduleList" class="class-list"></div>
+  <button onclick="startCheck()">Start Book Check</button>
+<div class="ScheduleImage"><img src="IMG_2057.jpg" alt="My Schedule" style="max-width: 100%; border: 1px solid #ccc; margin-bottom: 20px;"></div>
+  <h3>AI Suggestions</h3>
+<ul id="suggestions" style="background:#e0f7fa; padding:10px;"></ul>
+<h3>Teach AttackBot a New Rule</h3>
+<input type="text" id="customTrigger" placeholder="Class name (e.g. PE)">
+<br><input type="text" id="customResponse" placeholder="What should AttackBot say?">
+<br><button onclick="addCustomRule()">Add Rule</button>
+<ul id="customRulesList"></ul>
+<h4>AttackBot Memory Log</h4>
+<ul id="memoryLog" style="background:#fce4ec; padding:10px;"></ul>
+<h3>📋 Today’s Smart Reminders</h3>
+<ul id="smartReminders" style="background:#fff9c4; padding:10px; border-radius:8px;"></ul>
+
+
+
+
+</div>
+
+<!-- REVISION ZONE TAB -->
+<div id="revision" class="content">
+  <h2>Revision Zone</h2>
+  <textarea id="revisionNotes" placeholder="Write your study notes, exam info, links, etc. here..."></textarea>
+  <button class="save-btn" onclick="saveRevision()">Save Revision Notes</button>
+</div>
+
+<!-- WEEKLY PLANNER TAB -->
+<div id="planner" class="content">
+  <h2>Weekly Plan</h2>
+  <div id="plannerContent"></div>
+  <button class="save-btn" onclick="savePlanner()">Save Weekly Plan</button>
+  <hr>
+  <button onclick="viewBackups()">View Past Weeks</button>
+<div id="backupView"></div>
+</div>
+
+<div id="tools" class="content">
+    <h2>Tools & Extras</h2>
+  
+    <!-- 1. Homework Tracker -->
+    <h3>📘 Homework Tracker</h3>
+    <input type="text" id="hwSubject" placeholder="Subject">
+    <input type="text" id="hwTask" placeholder="Task">
+    <input type="date" id="hwDue">
+    <button onclick="addHomework()">Add</button>
+    <ul id="homeworkList"></ul>
+  
+    <hr>
+  
+    <!-- 2. Exam Countdown -->
+    <h3>⏳ Exam Countdown</h3>
+    <input type="text" id="examSubject" placeholder="Subject">
+    <input type="date" id="examDate">
+    <button onclick="addExam()">Add Exam</button>
+    <ul id="examCountdownList"></ul>
+  
+    <hr>
+  
+    <!-- 3. Flashcards -->
+
+    <h3>🧠 Flashcards</h3>
+    <input type="text" id="flashQ" placeholder="Question">
+    <input type="text" id="flashA" placeholder="Answer">
+    <br>
+    <button onclick="addFlashcard()">Add Flashcard</button>
+    <button onclick="startQuiz()">Start Quiz</button>
+    <div id="flashcardDisplay" style="margin-top:10px; background:#eef; padding:10px;"></div>
+    
+    
+    
+    
+
+  
+    <hr>
+  
+    <!-- 4. Sticky Note -->
+    <h3>💬 Quick Note to Self</h3>
+    <textarea id="quickNote" placeholder="Write your note here..."></textarea>
+    <button onclick="saveNote()">Save Note</button>
+    <div id="savedNote" style="margin-top:10px; padding:10px; background:#ffffcc;"></div>
+    <hr>
+    <h3>📓 Subject Notes</h3>
+<select id="noteSubject" onchange="loadSubjectNote()">
+  <option value="Math">Math</option>
+  <option value="Science">Science</option>
+  <option value="Arabic">Arabic</option>
+  <option value="Islamic">Islamic</option>
+  <option value="English">English</option>
+  <option value="P.E.">P.E.</option>
+  <option value="Computer">Computer</option>
+  <option value="Art">Art</option>
+  <option value="Social Studies">Social Studies</option>
+  <option value="Life Skills">Life Skills</option>
+</select>
+
+<textarea id="subjectNote" placeholder="Write notes for this subject here..."></textarea>
+<button onclick="saveSubjectNote()">Save Note</button>
+
+ 
+  
+  <div id="calendar" class="content active">
+    <h2>📅 Weekly Class Schedule</h2>
+    <table border="1" style="border-collapse: collapse; width: 100%; text-align: center;">
+      <thead>
+        <tr>
+          <th>Period</th>
+          <th>Sunday</th>
+          <th>Monday</th>
+          <th>Tuesday</th>
+          <th>Wednesday</th>
+          <th>Thursday</th>
+        </tr>
+      </thead>
+      <tbody id="calendarBody"></tbody>
+    </table>
+  </div>
+  
+  <hr>
+  <h3>🗓️ Daily Self-Evaluation</h3>
+<p>Evaluate your day:</p>
+<label>🧠 Understanding:
+  <select id="evalUnderstand">
+    <option value="5">⭐⭐⭐⭐⭐</option>
+    <option value="4">⭐⭐⭐⭐</option>
+    <option value="3">⭐⭐⭐</option>
+    <option value="2">⭐⭐</option>
+    <option value="1">⭐</option>
+  </select>
+</label><br>
+<label>🎯 Focus:
+  <select id="evalFocus">
+    <option value="5">⭐⭐⭐⭐⭐</option>
+    <option value="4">⭐⭐⭐⭐</option>
+    <option value="3">⭐⭐⭐</option>
+    <option value="2">⭐⭐</option>
+    <option value="1">⭐</option>
+  </select>
+</label><br>
+<label>📚 Homework:
+  <select id="evalHomework">
+    <option value="5">⭐⭐⭐⭐⭐</option>
+    <option value="4">⭐⭐⭐⭐</option>
+    <option value="3">⭐⭐⭐</option>
+    <option value="2">⭐⭐</option>
+    <option value="1">⭐</option>
+  </select>
+</label><br><br>
+<button onclick="saveEvaluation()">Save Evaluation</button>
+<hr>
+<div id="evaluationHistory" style="margin-top: 15px; background: #f3e5f5; padding: 10px;"></div>
+<h3>🔥 Homework Timer & Streak</h3>
+<p>Start the timer when doing your homework. When you're done, mark it complete!</p>
+<button onclick="startHomeworkTimer()">▶️ Start Timer</button>
+<button onclick="completeHomework()">✅ Finished</button>
+<div id="timerStatus" style="margin-top:10px;"></div>
+<div id="streakStatus" style="margin-top:10px; font-weight:bold;"></div>
+<hr>
+<h3>📘 Topic Mastery Checklist</h3>
+<select id="masterySubject" onchange="loadChecklist()">
+  <option value="Math">Math</option>
+  <option value="Science">Science</option>
+  <option value="Arabic">Arabic</option>
+  <option value="Islamic">Islamic</option>
+  <option value="English">English</option>
+</select>
+
+<br><textarea id="topicInput" placeholder="Enter topics separated by commas..."></textarea>
+<br><button onclick="saveTopics()">💾 Save Topics</button>
+
+<div id="topicList" style="margin-top: 10px;"></div>
+<hr>
+<h3>🎯 Mini Goal Reminder Board</h3>
+<input type="text" id="goalInput" placeholder="Write your goal (e.g. Review for science quiz)">
+<button onclick="addGoal()">Add Goal</button>
+
+<ul id="goalList" style="margin-top: 10px; background: #fff8e1; padding: 10px;"></ul>
+
+</div>
+  
+  
+  
+<script src="script.js"></script>
+
+
+</body>
+</html>
