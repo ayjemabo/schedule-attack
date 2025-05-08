@@ -69,12 +69,23 @@ if (Notification.permission !== "granted") {
   Notification.requestPermission();
 }
 function notifyScheduleTime() {
-  if (Notification.permission === "granted") {
-    new Notification("Schedule Attack Time!", {
-      body: "It's time to pack your books for tomorrow!",
-      icon: "logo.png"
-    });
-  }
+  if ('Notification' in window) {
+  Notification.requestPermission().then(permission => {
+    if (permission === "granted") {
+      setTimeout(() => {
+        try {
+          new Notification("Schedule Attack Time!", {
+            body: "It's time to pack your books for tomorrow!",
+            icon: "logo.png"
+          });
+        } catch (e) {
+          console.log("Notification failed:", e);
+        }
+      }, 10000); // 10-second demo delay
+    }
+  }).catch(err => console.log("Permission error:", err));
+}
+
 }
 setTimeout(notifyScheduleTime, 10000); // Notify after 10 seconds for demo purposes
 // Set the schedule day based on the current day
